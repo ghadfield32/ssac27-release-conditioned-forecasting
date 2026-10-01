@@ -131,5 +131,22 @@
     "causal coaching benefit",
     "venue acceptance of linked data",
     "conference submission"
-  ]
+  ],
+  "test_portability_correction": {
+    "initial_linux_ci_run": 36922063486,
+    "initial_linux_result": {
+      "passed": 645,
+      "failed": 4,
+      "deselected": 12
+    },
+    "cause": "two inherited fixtures patched global subprocess.check_output; first Linux Matplotlib font query expected bytes",
+    "new_regression_tests": 2,
+    "regression_red_observed": true,
+    "affected_modules_after_fix": {
+      "passed": 36,
+      "deselected": 2,
+      "exit_code": 0
+    },
+    "scientific_runtime_unchanged": true
+  }
 }

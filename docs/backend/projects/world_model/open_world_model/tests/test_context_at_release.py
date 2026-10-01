@@ -6,6 +6,7 @@ import hashlib
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -238,7 +239,8 @@ def _fake_run(tmp_path, config, task_configs, monkeypatch):
                  "sha256": "f" * 64, "participant": "P0004", "session": "2025-12-18"})
     inventory = tmp_path / "inventory.json"
     inventory.write_text(json.dumps({"source_revision": config["data_revision"], "per_trial": rows}), encoding="utf-8")
-    monkeypatch.setattr(study.event20.subprocess, "check_output", lambda *a, **k: config["data_revision"] + "\n")
+    monkeypatch.setattr(study.event20, "subprocess", SimpleNamespace(
+        check_output=lambda *a, **k: config["data_revision"] + "\n"))
     cfg = dict(config, expected_trials=2, inventory_sha256=hashlib.sha256(inventory.read_bytes()).hexdigest())
     built, inputs = study.build_rows(study.event20.admitted_rows(inventory, data, cfg), data.resolve(), cfg, event_config, rule_config, [])
     frozen = [{"path": r["path"], "frozen": {"arms": {"event": r["frozen"]["arm"]}}} for r in built]
@@ -256,6 +258,14 @@ def _fake_run(tmp_path, config, task_configs, monkeypatch):
     output.mkdir()
     args = type("Args", (), {"data_root": data, "inventory": inventory, "config_sha256": "x", "output": output})()
     return args, cfg, rows
+
+
+def test_fake_revision_does_not_change_unrelated_subprocess_output(tmp_path, config, task_configs, monkeypatch):
+    import subprocess
+
+    _fake_run(tmp_path, config, task_configs, monkeypatch)
+    output = subprocess.check_output([sys.executable, "-c", "print('unrelated-process')"])
+    assert output.strip() == b"unrelated-process"
 
 
 def test_run_freezes_before_scoring_reproduces_event21_and_never_opens_protected_rows(tmp_path, config, task_configs, monkeypatch):

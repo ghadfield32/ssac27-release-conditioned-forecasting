@@ -11,7 +11,10 @@ protocol, storage, leakage, unit and end-to-end fixture tests. It explicitly
 deselects nine historical tests that
 read real files but lack a real-data marker, and excludes three checks marked
 `private_evidence`. Exact node IDs live in `pytest-source.ini`; they are not
-silently turned into passes. No test implementation was changed.
+silently turned into passes. Two inherited fixture helpers now isolate their
+fake Git response to the study module so Matplotlib's Linux font discovery
+uses the real subprocess API. Their scientific assertions are unchanged;
+two regression tests cover the unrelated-subprocess boundary.
 
 After authorized data acquisition, run the original public profile:
 

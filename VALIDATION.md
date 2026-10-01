@@ -41,6 +41,22 @@ evidence is in [REPRODUCTION_RECEIPT.json](REPRODUCTION_RECEIPT.json).
 
 ## Source checks
 
+### Linux CI fixture correction
+
+The first public Linux CI run at commit `7636cd4` executed the source suite:
+645 passed and four failed because two inherited test helpers replaced the
+shared `subprocess.check_output` function with a string-returning Git stub.
+Matplotlib's first Linux font query legitimately expected bytes from that API.
+The failure did not involve an experiment fit or a scientific assertion.
+
+The correction replaces only each study module's test-time subprocess binding.
+Two new regression checks first failed by receiving the fake revision instead
+of real child-process bytes, then passed. The complete affected test modules
+passed **36 tests, 2 existing private-evidence exclusions**. Runtime scientific
+source, configs, lock, results and numerical comparators remain unchanged.
+`SOURCE_MANIFEST.json` records the two test-file exceptions explicitly.
+Remote verification of this correction is tracked in GitHub Actions.
+
 From this root, using an existing Python 3.12.6 / NumPy 2.3.5 / pytest 9.0.2
 environment (not a newly synchronized lock):
 

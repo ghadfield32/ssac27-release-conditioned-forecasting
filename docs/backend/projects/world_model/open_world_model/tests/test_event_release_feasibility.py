@@ -7,6 +7,7 @@ import json
 import math
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -277,12 +278,21 @@ def _fake_run(tmp_path, config, monkeypatch):
     regime17_manifest.write_bytes(gzip.compress(regime17_raw, mtime=0))
     cfg = dict(config, expected_trials=2, inventory_sha256=hashlib.sha256(inventory.read_bytes()).hexdigest(),
                regime17_retained_manifest={"path": str(regime17_manifest), "original_sha256": hashlib.sha256(regime17_raw).hexdigest()})
-    monkeypatch.setattr(study.subprocess, "check_output", lambda *a, **k: config["data_revision"] + "\n")
+    monkeypatch.setattr(study, "subprocess", SimpleNamespace(
+        check_output=lambda *a, **k: config["data_revision"] + "\n"))
     output = tmp_path / "run"
     output.mkdir()
     args = type("Args", (), {"data_root": data, "inventory": inventory, "regime17_manifest": regime17_manifest,
                              "config_sha256": "x", "output": output})()
     return args, cfg, rows
+
+
+def test_fake_revision_does_not_change_unrelated_subprocess_output(tmp_path, config, monkeypatch):
+    import subprocess
+
+    _fake_run(tmp_path, config, monkeypatch)
+    output = subprocess.check_output([sys.executable, "-c", "print('unrelated-process')"])
+    assert output.strip() == b"unrelated-process"
 
 
 def test_run_detects_events_by_motion_and_never_opens_protected_participants(tmp_path, config, monkeypatch):

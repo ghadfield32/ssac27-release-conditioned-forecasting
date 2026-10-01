@@ -9,7 +9,9 @@
     ".gitignore",
     "DATA.md",
     "README.md",
-    "REVIEW.md"
+    "REVIEW.md",
+    "docs/backend/projects/world_model/open_world_model/tests/test_context_at_release.py",
+    "docs/backend/projects/world_model/open_world_model/tests/test_event_release_feasibility.py"
   ],
   "omitted": [
     "participant archives",
@@ -494,6 +496,10 @@
       "THIRD_PARTY_NOTICES.md",
       "REPRODUCTION_RECEIPT.json"
     ],
-    "licensing": "MIT software; separate SPL and derived-aggregate terms in THIRD_PARTY_NOTICES.md"
+    "licensing": "MIT software; separate SPL and derived-aggregate terms in THIRD_PARTY_NOTICES.md",
+    "test_only_portability_patches": [
+      "docs/backend/projects/world_model/open_world_model/tests/test_context_at_release.py",
+      "docs/backend/projects/world_model/open_world_model/tests/test_event_release_feasibility.py"
+    ]
   }
 }

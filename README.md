@@ -70,9 +70,11 @@ private outputs under `outputs/`; do not publish those outputs.
 
 ## Package structure
 
-- `docs/backend/projects/world_model/open_world_model/`: the unchanged curated
-  source, tests, frozen protocols and dependency lock. Historical paths are
-  retained so reproduction does not require changing scientific code.
+- `docs/backend/projects/world_model/open_world_model/`: historical scientific
+  source, tests, frozen protocols and dependency lock. Runtime source and
+  numerical evidence remain unchanged. Two inherited test fixtures have a
+  documented subprocess-isolation fix for Linux; see `VALIDATION.md`.
+  Historical paths are retained so scientific code needs no path rewrite.
 - `reports/`: aggregate result tables, figures and provenance summaries.
 - `spl_data/`: upstream licence, attribution, revision, input file manifest and archive hashes.
 - `fetch_data.py`: pinned public acquisition with per-file SHA-256 verification.
